@@ -25,6 +25,14 @@ lerna-debug.log*
 *.sqlite
 *.db
 
+.agent
+
+# Architecture & Decision records
+DECISIONS.md
+decisions.md
+docs/DECISIONS.md
+docs/decisions.md
+
 # Angular & Build Tools
 /.angular
 .sass-cache/
