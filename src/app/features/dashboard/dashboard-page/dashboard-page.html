@@ -1,1 +1,65 @@
-<p>dashboard-page works!</p>
+﻿<div class="page-heading">
+  <div>
+    <p class="eyebrow">MERCHANT ONBOARDING</p>
+    <h1>Applications</h1>
+    <p class="muted">Track and manage applications in your workspace.</p>
+  </div>
+  @if (permission.canCreateOrEdit()) {
+    <a mat-flat-button routerLink="/applications/create">+ New application</a>
+  }
+</div>
+<section class="card" aria-label="Merchant applications">
+  <form class="filters" [formGroup]="filters" (submit)="$event.preventDefault()">
+    <div>
+      <label for="search">Search merchants</label
+      ><input
+        id="search"
+        formControlName="search"
+        type="search"
+        placeholder="Search business name…"
+      />
+    </div>
+    <div>
+      <label for="status">Status</label
+      ><select id="status" formControlName="status">
+        <option value="">All statuses</option>
+        @for (status of statuses; track status) {
+          <option [value]="status">{{ status.replaceAll('_', ' ') }}</option>
+        }
+      </select>
+    </div>
+  </form>
+  @if (state.error()) {
+    <div class="feedback" role="alert">
+      <p class="error">{{ state.error() }}</p>
+      <button mat-stroked-button (click)="state.retry()">Retry</button>
+    </div>
+  } @else if (state.loading()) {
+    <p class="feedback muted" role="status">Loading applications…</p>
+  } @else {
+    <app-applications-table [applications]="state.result().data" />
+  }
+  <div class="pagination">
+    <span class="muted" aria-live="polite"
+      >{{ state.result().total }} applications · Page {{ state.query().page }}</span
+    >
+    <div>
+      <button
+        mat-button
+        [disabled]="state.loading() || state.query().page === 1"
+        (click)="state.page(state.query().page - 1)"
+      >
+        Previous
+      </button>
+      <button
+        mat-button
+        [disabled]="
+          state.loading() || state.query().page * state.query().pageSize >= state.result().total
+        "
+        (click)="state.page(state.query().page + 1)"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+</section>

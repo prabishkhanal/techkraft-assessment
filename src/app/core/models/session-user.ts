@@ -1,16 +1,11 @@
-import { Role } from './role';
+﻿import { Role } from './role';
 
-/**
- * The currently logged-in user.
- * Kept in memory only (DECISIONS.md §1) — never persisted to storage.
- */
+/** Fixed demo identity with opaque, server-issued tokens. Stored in memory only. */
 export interface SessionUser {
-  /** Display username (e.g. "sales-user"). */
   username: string;
-  /** The single role this user holds. */
   role: Role;
-  /** Fabricated JWT access token attached by the HTTP interceptor. */
   accessToken: string;
-  /** Fabricated JWT refresh token used by POST /auth/refresh. */
   refreshToken: string;
+  /** Unix time in milliseconds; older demo sessions can use 401-based refresh. */
+  accessTokenExpiresAt?: number;
 }

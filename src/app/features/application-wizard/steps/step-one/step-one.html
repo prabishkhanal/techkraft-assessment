@@ -1,1 +1,37 @@
-<p>step-one works!</p>
+<h2>Business information</h2>
+<p class="muted">Tell us about the merchant. All fields are required before submission.</p>
+<div class="form-grid" [formGroup]="form()">
+  <app-form-field
+    name="businessName"
+    label="Business name"
+    [control]="form().controls.businessName"
+    placeholder="e.g. Demo Market"
+  />
+  <div>
+    <label for="businessType">Business type</label
+    ><select
+      id="businessType"
+      formControlName="businessType"
+      [attr.aria-invalid]="
+        form().controls.businessType.touched && form().controls.businessType.invalid
+      "
+      aria-describedby="businessType-hint"
+    >
+      <option value="">Select a type</option>
+      @for (type of ['Retail', 'Services', 'Hospitality', 'Other']; track type) {
+        <option [value]="type">{{ type }}</option>
+      }
+    </select>
+    <p id="businessType-hint" class="field-hint error">
+      @if (form().controls.businessType.touched && form().controls.businessType.invalid) {
+        Select a business type.
+      }
+    </p>
+  </div>
+  <app-form-field
+    name="registrationNumber"
+    label="Registration number"
+    [control]="form().controls.registrationNumber"
+    placeholder="e.g. DEMO-1001"
+  />
+</div>

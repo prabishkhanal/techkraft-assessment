@@ -1,1 +1,16 @@
-<p>risk-history works!</p>
+<section class="card">
+  <h2>Risk history</h2>
+  <ol class="history">
+    @for (entry of history(); track entry.id) {
+      <li>
+        <span class="badge" [attr.data-status]="entry.decision">{{ entry.decision }}</span>
+        <p>{{ entry.comment }}</p>
+        <p class="muted small">
+          {{ entry.reviewerUsername }} · {{ entry.createdAt | date: 'medium' }}
+        </p>
+      </li>
+    } @empty {
+      <li class="muted">No decisions recorded yet.</li>
+    }
+  </ol>
+</section>

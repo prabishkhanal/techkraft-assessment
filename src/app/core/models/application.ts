@@ -10,9 +10,8 @@ export enum ApplicationStatus {
 /**
  * A merchant application record.
  *
- * Sensitive fields (taxId, bankAccountNumber) are always present in the
- * payload but the UI must mask them by default and only reveal when the
- * current role has permission (see PermissionService.canReveal).
+ * List and detail responses contain masked tax/account values. A separate,
+ * authorized endpoint returns raw values for a short-lived reveal.
  */
 export interface Application {
   id: string;

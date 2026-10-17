@@ -50,6 +50,14 @@ describe('SessionService', () => {
     expect(session.user()).toBeNull();
   });
 
+  it('updates expiry metadata and clears it when a legacy refresh omits it', () => {
+    session.login(fakeUser());
+    session.updateTokens('access-2', 'refresh-2', 123456789);
+    expect(session.user()?.accessTokenExpiresAt).toBe(123456789);
+    session.updateTokens('access-3', 'refresh-3');
+    expect(session.user()?.accessTokenExpiresAt).toBeUndefined();
+  });
+
   it('logout() clears everything back to null', () => {
     session.login(fakeUser());
     session.logout();

@@ -1,1 +1,28 @@
-<p>review-panel works!</p>
+<section class="card">
+  <p class="eyebrow">RISK REVIEW</p>
+  <h2>Record your decision</h2>
+  <label for="review-comment">Reason for decision</label
+  ><textarea
+    id="review-comment"
+    rows="4"
+    [formControl]="comment"
+    [attr.aria-invalid]="comment.touched && comment.invalid"
+    aria-describedby="review-hint"
+    [readOnly]="busy()"
+  ></textarea>
+  <p id="review-hint" class="field-hint" [class.error]="comment.touched && comment.invalid">
+    Use 10–1,000 characters to explain your decision.
+  </p>
+  <div class="actions">
+    <button mat-flat-button [disabled]="busy()" (click)="decide('APPROVED')">Approve</button
+    ><button mat-stroked-button class="danger" [disabled]="busy()" (click)="decide('REJECTED')">
+      Reject
+    </button>
+  </div>
+  @if (busy()) {
+    <p role="status">Saving decision…</p>
+  }
+  @if (error()) {
+    <p role="alert" class="error">{{ error() }}</p>
+  }
+</section>

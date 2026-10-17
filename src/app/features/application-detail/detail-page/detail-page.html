@@ -1,1 +1,80 @@
-<p>detail-page works!</p>
+<a class="back-link" routerLink="/dashboard">← Applications</a>
+@if (state.loading()) {
+  <p role="status">Loading application…</p>
+} @else if (state.error()) {
+  <section class="card" role="alert">
+    <p class="error">{{ state.error() }}</p>
+    <button mat-stroked-button (click)="load()">Retry</button>
+  </section>
+} @else if (state.application(); as app) {
+  <div class="page-heading">
+    <div>
+      <p class="eyebrow">APPLICATION DETAILS</p>
+      <h1>{{ app.businessName || 'Untitled draft' }}</h1>
+      <p class="muted">
+        Created by {{ app.createdBy }} · Updated {{ app.updatedAt | date: 'medium' }}
+      </p>
+    </div>
+    <div class="actions">
+      <span class="badge" [attr.data-status]="app.status">{{
+        app.status.replaceAll('_', ' ')
+      }}</span>
+      @if (permission.canEditApplication(app)) {
+        <a mat-flat-button [routerLink]="['/applications', app.id, 'edit']">Edit draft</a>
+      }
+    </div>
+  </div>
+  <div class="detail-layout">
+    <div class="stack">
+      <section class="card">
+        <h2>Business information</h2>
+        <dl class="detail-grid">
+          <div>
+            <dt>Business type</dt>
+            <dd>{{ app.businessType || 'Not provided' }}</dd>
+          </div>
+          <div>
+            <dt>Registration number</dt>
+            <dd>{{ app.registrationNumber || 'Not provided' }}</dd>
+          </div>
+          <div>
+            <dt>Assigned reviewer</dt>
+            <dd>{{ app.assignedTo || 'Unassigned' }}</dd>
+          </div>
+        </dl>
+      </section>
+      <section class="card">
+        <h2>Contact information</h2>
+        <dl class="detail-grid">
+          <div>
+            <dt>Contact name</dt>
+            <dd>{{ app.contactName || 'Not provided' }}</dd>
+          </div>
+          <div>
+            <dt>Email</dt>
+            <dd>{{ app.contactEmail || 'Not provided' }}</dd>
+          </div>
+          <div>
+            <dt>Phone</dt>
+            <dd>{{ app.contactPhone || 'Not provided' }}</dd>
+          </div>
+        </dl>
+      </section>
+      <section class="card">
+        <h2>Financial information</h2>
+        <p class="muted small">Sensitive values are masked by default.</p>
+        <app-sensitive-field [application]="app" />
+        <dl>
+          <dt>Estimated monthly volume</dt>
+          <dd>USD {{ app.estimatedMonthlyVolume | number }}</dd>
+        </dl>
+      </section>
+    </div>
+    <div class="stack">
+      @if (permission.canReview(app)) {
+        <app-review-panel [application]="app" (decided)="load()" />
+      }
+      <app-risk-history [history]="state.history()" />
+    </div>
+  </div>
+}

@@ -1,1 +1,91 @@
-<p>assignments-page works!</p>
+<div class="page-heading">
+  <div>
+    <p class="eyebrow">ADMINISTRATION</p>
+    <h1>Reviewer assignments</h1>
+    <p class="muted">
+      Assign pending applications to a reviewer. Drafts and completed decisions stay locked.
+    </p>
+  </div>
+</div>
+<section class="card">
+  @if (error()) {
+    <div role="alert" class="feedback">
+      <p class="error">{{ error() }}</p>
+      <button mat-button (click)="load()">Retry</button>
+    </div>
+  }
+  @if (message()) {
+    <p role="status" class="success">{{ message() }}</p>
+  }
+  @if (loading()) {
+    <p role="status">Loading assignments…</p>
+  } @else {
+    <div class="table-scroll">
+      <table>
+        <caption class="sr-only">
+          Assign merchant applications
+        </caption>
+        <thead>
+          <tr>
+            <th>Merchant</th>
+            <th>Status</th>
+            <th>Reviewer</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (app of result()?.data; track app.id) {
+            <tr>
+              <td>
+                <a [routerLink]="['/applications', app.id]">{{
+                  app.businessName || 'Untitled draft'
+                }}</a>
+              </td>
+              <td>
+                <span class="badge" [attr.data-status]="app.status">{{
+                  app.status.replaceAll('_', ' ')
+                }}</span>
+              </td>
+              <td>
+                <select
+                  #reviewer
+                  [value]="app.assignedTo || ''"
+                  [attr.aria-label]="'Reviewer for ' + (app.businessName || 'draft')"
+                  [disabled]="!!saving() || !['SUBMITTED', 'UNDER_REVIEW'].includes(app.status)"
+                >
+                  <option value="">Unassigned</option>
+                  @for (user of reviewers(); track user.username) {
+                    <option [value]="user.username">{{ user.username }}</option>
+                  }
+                </select>
+              </td>
+              <td>
+                <button
+                  mat-button
+                  [disabled]="!!saving() || !['SUBMITTED', 'UNDER_REVIEW'].includes(app.status)"
+                  (click)="assign(app, reviewer.value)"
+                >
+                  {{ saving() === app.id ? 'Saving…' : 'Save' }}
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+  <div class="pagination">
+    <span class="muted">{{ result()?.total || 0 }} applications · Page {{ page() }}</span>
+    <div>
+      <button mat-button [disabled]="loading() || page() === 1" (click)="changePage(-1)">
+        Previous</button
+      ><button
+        mat-button
+        [disabled]="loading() || page() * 5 >= (result()?.total || 0)"
+        (click)="changePage(1)"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+</section>

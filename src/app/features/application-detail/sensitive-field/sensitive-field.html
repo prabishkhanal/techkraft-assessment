@@ -1,1 +1,25 @@
-<p>sensitive-field works!</p>
+<dl class="detail-grid">
+  <div>
+    <dt>Tax ID</dt>
+    <dd>{{ revealed()?.taxId || application().taxId || 'Not provided' }}</dd>
+  </div>
+  <div>
+    <dt>Bank account</dt>
+    <dd>
+      {{ revealed()?.bankAccountNumber || application().bankAccountNumber || 'Not provided' }}
+    </dd>
+  </div>
+</dl>
+@if (permission.canReveal(application())) {
+  <button
+    mat-stroked-button
+    [disabled]="busy()"
+    [attr.aria-pressed]="!!revealed()"
+    (click)="toggle()"
+  >
+    {{ busy() ? 'Loading…' : revealed() ? 'Hide sensitive values' : 'Reveal for 15 seconds' }}
+  </button>
+}
+@if (error()) {
+  <p class="error" role="alert">{{ error() }}</p>
+}

@@ -93,7 +93,7 @@ describe('PermissionService', () => {
       expect(permission.canViewApplication(app)).toBe(true);
     });
 
-    it('SALES → false for someone else\'s app', () => {
+    it("SALES → false for someone else's app", () => {
       loginAs(Role.Sales, 'other-sales');
       expect(permission.canViewApplication(app)).toBe(false);
     });

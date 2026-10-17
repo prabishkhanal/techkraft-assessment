@@ -1,1 +1,24 @@
-<p>step-two works!</p>
+<h2>Contact information</h2>
+<p class="muted">Use fictional contact details for this assessment.</p>
+<div class="form-grid">
+  <app-form-field
+    name="contactName"
+    label="Contact name"
+    [control]="form().controls.contactName"
+    placeholder="Demo Contact"
+  />
+  <app-form-field
+    name="contactEmail"
+    label="Email address"
+    type="email"
+    [control]="form().controls.contactEmail"
+    placeholder="merchant@example.test"
+  />
+  <app-form-field
+    name="contactPhone"
+    label="Phone number"
+    type="tel"
+    [control]="form().controls.contactPhone"
+    placeholder="+1 202 555 0100"
+  />
+</div>

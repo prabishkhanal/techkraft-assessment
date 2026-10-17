@@ -1,1 +1,67 @@
-<p>step-three works!</p>
+<h2>Financial information</h2>
+<p class="muted">Sensitive fields stay masked. Enter fictional values only.</p>
+<div class="form-grid">
+  <app-form-field
+    name="taxId"
+    label="Tax ID"
+    type="password"
+    inputMode="numeric"
+    [control]="form().controls.taxId"
+    [hint]="storedTax() ? 'Stored ' + storedTax() + '. Leave blank to keep it.' : 'Use 9 digits.'"
+  />
+  <app-form-field
+    name="bankAccountNumber"
+    label="Bank account number"
+    type="password"
+    inputMode="numeric"
+    [control]="form().controls.bankAccountNumber"
+    [hint]="
+      storedBank()
+        ? 'Stored ' + storedBank() + '. Leave blank to keep it.'
+        : 'Use 8–18 digits. No card numbers.'
+    "
+  />
+  <div>
+    <label for="monthlyVolumeOption">Estimated monthly volume (USD)</label>
+    <select
+      id="monthlyVolumeOption"
+      [formControl]="volumeChoice"
+      [attr.aria-invalid]="
+        volumeChoice.value !== 'custom' &&
+        form().controls.estimatedMonthlyVolume.touched &&
+        form().controls.estimatedMonthlyVolume.invalid
+      "
+      aria-describedby="monthlyVolumeOption-hint"
+      (blur)="form().controls.estimatedMonthlyVolume.markAsTouched()"
+    >
+      <option value="">Select an amount</option>
+      @for (amount of volumeOptions; track amount) {
+        <option [value]="amount">USD {{ amount | number }}</option>
+      }
+      <option value="custom">Custom amount</option>
+    </select>
+    <p
+      id="monthlyVolumeOption-hint"
+      class="field-hint"
+      [class.error]="!volumeChoice.value && form().controls.estimatedMonthlyVolume.touched"
+    >
+      {{
+        !volumeChoice.value && form().controls.estimatedMonthlyVolume.touched
+          ? 'Select a monthly volume or enter a custom amount.'
+          : 'Choose a preset or enter a custom amount from USD 1 to 1,000,000,000.'
+      }}
+    </p>
+  </div>
+  @if (volumeChoice.value === 'custom') {
+    <app-form-field
+      name="estimatedMonthlyVolume"
+      label="Custom monthly volume (USD)"
+      type="number"
+      inputMode="decimal"
+      [min]="1"
+      [max]="1000000000"
+      [control]="form().controls.estimatedMonthlyVolume"
+      hint="From 1 to 1,000,000,000. Decimal amounts are allowed."
+    />
+  }
+</div>

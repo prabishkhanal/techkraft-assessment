@@ -1,9 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { Application } from '../../../core/models';
 
 @Component({
-  imports: [],
+  standalone: true,
+  imports: [DatePipe, RouterLink],
   selector: 'app-applications-table',
   styleUrl: './applications-table.scss',
   templateUrl: './applications-table.html',
 })
-export class ApplicationsTable {}
+export class ApplicationsTable {
+  readonly applications = input<Application[]>([]);
+}

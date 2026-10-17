@@ -1,1 +1,26 @@
-<p>login works!</p>
+<main class="login-page">
+  <section class="card login-card" aria-labelledby="login-title">
+    <p class="eyebrow">MERCHANT PORTAL</p>
+    <h1 id="login-title">Welcome back</h1>
+    <p class="muted">Manage merchant applications from draft to decision.</p>
+    <form [formGroup]="form" (ngSubmit)="login()">
+      <label for="demo-user">Demo workspace</label>
+      <select id="demo-user" formControlName="username">
+        <option value="sales-user">Sales · My applications</option>
+        <option value="reviewer-user">Reviewer · Assigned applications</option>
+        <option value="admin-user">Admin · All applications & assignments</option>
+        <option value="other-sales">Other sales · Permission checks</option>
+        <option value="other-reviewer">Other reviewer · Permission checks</option>
+      </select>
+      @if (error()) {
+        <p role="alert" class="error">{{ error() }}</p>
+      }
+      <button mat-flat-button type="submit" [disabled]="busy()">
+        {{ busy() ? 'Opening workspace…' : 'Open workspace' }}
+      </button>
+    </form>
+    <p class="muted small">
+      Assessment demo · Fictional records only. Your session clears when you reload.
+    </p>
+  </section>
+</main>

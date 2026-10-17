@@ -1,1 +1,39 @@
-<p>review-summary works!</p>
+<h2>Review your application</h2>
+<dl class="detail-grid">
+  <div>
+    <dt>Business name</dt>
+    <dd>{{ data().businessName }}</dd>
+  </div>
+  <div>
+    <dt>Business type</dt>
+    <dd>{{ data().businessType }}</dd>
+  </div>
+  <div>
+    <dt>Registration number</dt>
+    <dd>{{ data().registrationNumber }}</dd>
+  </div>
+  <div>
+    <dt>Contact name</dt>
+    <dd>{{ data().contactName }}</dd>
+  </div>
+  <div>
+    <dt>Email</dt>
+    <dd>{{ data().contactEmail }}</dd>
+  </div>
+  <div>
+    <dt>Phone</dt>
+    <dd>{{ data().contactPhone }}</dd>
+  </div>
+  <div>
+    <dt>Tax ID</dt>
+    <dd>{{ data().taxId ? (data().taxId | mask) : storedTax() }}</dd>
+  </div>
+  <div>
+    <dt>Bank account</dt>
+    <dd>{{ data().bankAccountNumber ? (data().bankAccountNumber | mask) : storedBank() }}</dd>
+  </div>
+  <div>
+    <dt>Monthly volume</dt>
+    <dd>USD {{ data().estimatedMonthlyVolume | number }}</dd>
+  </div>
+</dl>

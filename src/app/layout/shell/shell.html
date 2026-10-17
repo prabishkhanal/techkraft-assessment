@@ -1,1 +1,25 @@
-<p>shell works!</p>
+﻿<a class="skip-link" href="#main-content">Skip to content</a>
+<header class="topbar">
+  <a routerLink="/dashboard" class="brand"
+    ><span class="brand-mark" aria-hidden="true">M</span> Merchant Portal</a
+  >
+  <div class="session">
+    <span
+      >{{ session.username() }} <span class="badge">{{ session.role() }}</span></span
+    ><button mat-button (click)="logout()">Sign out</button>
+  </div>
+</header>
+<div class="workspace">
+  <nav class="sidebar" aria-label="Main navigation">
+    <p class="eyebrow">WORKSPACE</p>
+    <a routerLink="/dashboard" routerLinkActive="active">Applications</a>
+    @if (permission.canCreateOrEdit()) {
+      <a routerLink="/applications/create" routerLinkActive="active">New application</a>
+    }
+    @if (permission.canManageAssignments()) {
+      <a routerLink="/assignments" routerLinkActive="active">Assignments</a>
+    }
+    <p class="sidebar-note muted small">Merchant onboarding<br />Fictional assessment workspace</p>
+  </nav>
+  <main id="main-content" class="page" tabindex="-1"><router-outlet /></main>
+</div>

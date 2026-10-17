@@ -1,1 +1,92 @@
-<p>wizard-container works!</p>
+<a routerLink="/dashboard" class="back-link">← Applications</a>
+<div class="page-heading">
+  <div>
+    <p class="eyebrow">MERCHANT ONBOARDING</p>
+    <h1>Merchant application</h1>
+    <p class="muted">Complete each section. Your draft saves automatically.</p>
+  </div>
+  <span class="badge">DRAFT</span>
+</div>
+@if (error()) {
+  <div class="card" role="alert">
+    <p class="error">{{ error() }}</p>
+    <button mat-button (click)="load()">Retry</button>
+  </div>
+} @else if (loading()) {
+  <p role="status">Opening draft…</p>
+} @else {
+  <section class="card wizard-card">
+    <ol class="steps" aria-label="Application progress">
+      @for (label of steps; track label; let i = $index) {
+        <li [class.current]="step() === i" [attr.aria-current]="step() === i ? 'step' : null">
+          <span>{{ i + 1 }}</span
+          >{{ label }}
+        </li>
+      }
+    </ol>
+    <form (ngSubmit)="step() === 3 ? submit() : next()" [formGroup]="form">
+      <fieldset [disabled]="submitting()">
+        @switch (step()) {
+          @case (0) {
+            <app-step-one [form]="form" />
+          }
+          @case (1) {
+            <app-step-two [form]="form" />
+          }
+          @case (2) {
+            <app-step-three
+              [form]="form"
+              [storedTax]="application()?.taxId ?? ''"
+              [storedBank]="application()?.bankAccountNumber ?? ''"
+            />
+          }
+          @case (3) {
+            <app-review-summary
+              [data]="form.getRawValue()"
+              [storedTax]="application()?.taxId ?? ''"
+              [storedBank]="application()?.bankAccountNumber ?? ''"
+            />
+            <p class="muted">
+              Submitting locks this application for review. Check the details before continuing.
+            </p>
+          }
+        }
+      </fieldset>
+      <div class="wizard-actions">
+        <button
+          mat-button
+          type="button"
+          [disabled]="step() === 0 || submitting()"
+          (click)="step.set(step() - 1)"
+        >
+          Back
+        </button>
+        <div>
+          <button
+            mat-stroked-button
+            type="button"
+            [disabled]="draft.busy() || submitting()"
+            (click)="save()"
+          >
+            Save draft</button
+          ><button mat-flat-button type="submit" [disabled]="submitting()">
+            {{ submitting() ? 'Submitting…' : step() === 3 ? 'Submit application' : 'Continue' }}
+          </button>
+        </div>
+      </div>
+    </form>
+    <p class="small muted" role="status">
+      {{
+        revision() !== draft.savedRevision() && !draft.busy() && !draft.error()
+          ? 'Unsaved changes…'
+          : draft.message()
+      }}
+    </p>
+    @if (draft.error()) {
+      <p class="error" role="alert">
+        {{ draft.error() }}
+        <button mat-button [disabled]="draft.busy()" (click)="save()">Retry save</button>
+      </p>
+    }
+  </section>
+}
